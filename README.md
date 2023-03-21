@@ -5,8 +5,6 @@ Provides a `docker-compose` environment for running Lighthouse.
 The following features are available:
 
 - A beacon node exposing a HTTP API on port `5052`.
-- A validator client (optional) that connects to the beacon node.
-- Wallet and validator key generation (optional).
 
 ## Usage
 
