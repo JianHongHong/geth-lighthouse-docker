@@ -1,0 +1,37 @@
+version: "3.0"
+
+services:
+    beacon_node:
+        image: sigp/lighthouse:${LIGHTHOUSE_VERSION}
+        volumes:
+            - ./lighthouse-data:/root/.lighthouse
+            - ./scripts:/root/scripts:ro
+            - ./jwttoken:/root/jwttoken:ro
+        ports:
+            - 5052:5052/tcp
+            - 5053:5053/tcp
+            - 5054:5054/tcp     # metrics endpoint
+            - 9000:9000/tcp
+            - 9000:9000/udp
+        env_file: .env
+        command: sh /root/scripts/start-beacon-node.sh
+        restart: on-failure
+        stop_grace_period: 3m
+    geth:
+        image: ethereum/client-go:${GETH_VERSION}
+        entrypoint: /bin/sh
+        volumes:
+            - ./geth-data:/root/.ethereum
+            - ${GETH_ANCIENT_CHAINDATA_DIR}:/root/ancient-data
+            - ./scripts:/root/scripts:ro
+            - ./jwttoken:/root/jwttoken:ro
+        ports:
+            - 30303:30303/tcp
+            - 30303:30303/udp
+            - 8545:8545
+            - 8551:8551
+        env_file: .env
+        command: /root/scripts/start-geth.sh
+        restart: on-failure
+        stop_grace_period: 3m
+
